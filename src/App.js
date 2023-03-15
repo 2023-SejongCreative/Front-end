@@ -1,7 +1,19 @@
 import "./App.css";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/login/Index";
+import Register from "./pages/register/Index";
 function App() {
-  return <div></div>;
+  return (
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login></Login>}></Route>
+          <Route path="/login" element={<Login></Login>}></Route>
+          <Route path="/register" element={<Register></Register>}></Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
