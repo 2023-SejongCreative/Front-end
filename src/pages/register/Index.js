@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { MyButton } from "./style";
-import { MyTypography } from "./style";
+import { MyButton, MyTypography } from "./style";
+
 import {
   //Button,
   CssBaseline,
