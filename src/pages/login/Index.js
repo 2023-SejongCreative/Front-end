@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { MyButton, MyTypography } from "./style";
-
+import api from "../../api/Interceptors";
+import { useNavigate } from "react-router-dom";
 import {
   //Button,
   CssBaseline,
@@ -17,11 +19,51 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const Index = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const theme = createTheme();
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    console.log(email);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    console.log(password);
+  };
+  const navigate = useNavigate();
   // form 전송
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    let body = {
+      email: email,
+      password: password,
+    };
     e.preventDefault();
+    // await api
+    //   .post(`/login`, body)
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => console.error("Error:", error));
+    await axios
+      .post("/login", body)
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200) {
+          alert("로그인 완료! Waffle에 오신걸 환영합니다❤️");
+          navigate("/");
+        } else if (response.response.data.code == "LOGIN-001") {
+          alert("일치하는 회원이 없습니다. 먼저 회원가입을 진행해주세요!");
+        } else if (response.response.data.code == "LOGIN-002") {
+          alert("비밀번호가 일치하지 않습니다.");
+        }
+
+        //LOGIN-001 : 회원가입 안 했을 때 ->
+        //LOGIN-002 : 틀린 비밀번호일 때 ->
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   return (
@@ -56,6 +98,8 @@ const Index = () => {
                     id="email"
                     name="email"
                     label="이메일 주소를 입력하세요"
+                    value={email}
+                    onChange={handleEmailChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -66,6 +110,8 @@ const Index = () => {
                     id="password"
                     name="password"
                     label="비밀번호를 입력하세요"
+                    value={password}
+                    onChange={handlePasswordChange}
                   />
                 </Grid>
               </Grid>
