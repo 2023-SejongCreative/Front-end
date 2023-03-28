@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import api from "../../api/Interceptors";
-import { MyButton, MyTypography } from "./style";
-import { useNavigate } from "react-router-dom";
+import { MyButton, MyTypography, MyLink } from "./style";
+import { useNavigate, NavLink, Link } from "react-router-dom";
 
 import {
   //Button,
@@ -31,6 +31,11 @@ const Index = () => {
     setEmail(e.target.value);
     console.log(email);
   };
+  const checkEmail = (e) => {
+    const emailRegexp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+    if (!emailRegexp.test(e.target.value))
+      alert("올바르지 않은 이메일 형식입니다.");
+  };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -45,32 +50,41 @@ const Index = () => {
     setName(e.target.value);
     console.log(name);
   };
+  const handeCheckedChange = (e) => {
+    setChecked(e.target.value);
+  };
   const navigate = useNavigate();
+
   // form 전송
   const handleSubmit = async (e) => {
+    e.preventDefault();
     let body = {
       email: email,
       password: password,
       name: name,
     };
-    e.preventDefault();
-    await axios
-      .post("/register", body)
-      .then((response) => {
-        console.log(response);
+    if (email == "") alert("이메일을 입력해주세요");
+    else if (password == "") alert("비밀번호를 입력해주세요");
+    else if (password2 == "") alert("비밀번호 확인를 입력해주세요");
+    else if (name == "") alert("이름을 입력해주세요");
+    else if (checked == false) alert("회원가입 약관에 동의해주세요");
+    else if (password !== password2)
+      alert("비밀번호와 비밀번호 확인 같지 않습니다.\n다시 입력해주세요.");
+    else {
+      await axios
+        .post("/register", body)
+        .then((response) => {
+          console.log(response);
 
-        if (response.status == 200) {
-          alert("회원가입에 성공하셨습니다. 로그인을 진행해주세요! ");
-          navigate("/login");
-        } else if (response.status == 400) {
-          alert("이미 회원가입 완료한 이메일입니다.");
-        }
-
-        //REGISTER-001 : 이미 있는 이메일 ->
-        //LOGIN-001 : 회원가입 안 했을 때 ->
-        //LOGIN-002 : 틀린 비밀번호일 때 ->
-      })
-      .catch((error) => console.error("Error:", error));
+          if (response.status == 200) {
+            alert("회원가입에 성공하셨습니다. 로그인을 진행해주세요! ");
+            navigate("/login");
+          } else if (response.status == 400) {
+            alert("이미 회원가입 완료한 이메일입니다.");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
   };
 
   return (
@@ -107,6 +121,7 @@ const Index = () => {
                     label="이메일 주소"
                     value={email}
                     onChange={handleEmailChange}
+                    onBlur={checkEmail}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -139,14 +154,20 @@ const Index = () => {
                     fullWidth
                     id="name"
                     name="name"
-                    label="이름"
+                    label="이름(실명)"
                     value={name}
                     onChange={handleNameChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
-                    control={<Checkbox onChange={setChecked} color="primary" />}
+                    control={
+                      <Checkbox
+                        onChange={handeCheckedChange}
+                        value={checked}
+                        color="primary"
+                      />
+                    }
                     label="회원가입 약관에 동의합니다."
                   />
                 </Grid>
@@ -162,6 +183,14 @@ const Index = () => {
               </MyButton>
             </FormControl>
           </Box>
+          <MyLink
+            component="button"
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
+            이미 회원가입을 했다면? 로그인 하러가기
+          </MyLink>
         </Box>
       </Container>
     </ThemeProvider>
