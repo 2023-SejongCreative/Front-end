@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MyButton, MyTypography } from "./style";
 import api from "../../api/Interceptors";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink, Link } from "react-router-dom";
+import { MyLink } from "./style";
 import {
   //Button,
   CssBaseline,
@@ -34,7 +35,8 @@ const Index = () => {
     console.log(password);
   };
   const navigate = useNavigate();
-  // form 전송
+
+  //form 전송
   const handleSubmit = async (e) => {
     let body = {
       email: email,
@@ -59,9 +61,6 @@ const Index = () => {
         } else if (response.response.data.code == "LOGIN-002") {
           alert("비밀번호가 일치하지 않습니다.");
         }
-
-        //LOGIN-001 : 회원가입 안 했을 때 ->
-        //LOGIN-002 : 틀린 비밀번호일 때 ->
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -126,6 +125,14 @@ const Index = () => {
               </MyButton>
             </FormControl>
           </Box>
+          <MyLink
+            component="button"
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
+            회원가입
+          </MyLink>
         </Box>
       </Container>
     </ThemeProvider>
