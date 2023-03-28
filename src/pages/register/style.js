@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Button";
+import Link from "@mui/material/Link";
 
 export const MyButton = styled(Button)`
   background-color: #e1a141;
@@ -21,4 +22,11 @@ export const MyTypography = styled.h1`
   margin-top: 35px;
   font-family: "Inter";
   color: black;
+`;
+export const MyLink = styled(Link)`
+  color: grey;
+  text-align: center;
+  :hover {
+    cursor: pointer;
+  }
 `;
