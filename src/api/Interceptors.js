@@ -1,9 +1,10 @@
 import axios from "axios";
 const api = axios.create({
-  baseURL: `http://192.168.0.7:8080`,
-  //timeout: 1000,
-  //headers: { "Content-type": "application/json" },
-  //헤더에는 보통 데이터 타입을 기입
+  proxy: {
+    target: `http://192.168.0.7:8080`,
+  },
+  timeout: 1000,
+  headers: { "Content-type": "application/json" },
 });
 
 // Add a request interceptor
