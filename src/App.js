@@ -6,7 +6,7 @@ import Register from "./pages/register/Index";
 function App() {
   localStorage.setItem("isAuthorized", false);
   let isAuthorized = localStorage.getItem("isAuthorized");
-  console.log(isAuthorized);
+  //console.log(isAuthorized);
   return (
     <div>
       <BrowserRouter>
