@@ -56,6 +56,10 @@ const Index = () => {
         if (response.status == 200) {
           alert("로그인 완료! Waffle에 오신걸 환영합니다❤️");
           navigate("/");
+          localStorage.setItem("jwt_accessToken", response.data);
+          localStorage.setItem("isAuthorized", true);
+          console.log(localStorage.getItem("jwt_accessToken"));
+          console.log(localStorage.getItem("isAuthorized"));
         } else if (response.response.data.code == "LOGIN-001") {
           alert("일치하는 회원이 없습니다. 먼저 회원가입을 진행해주세요!");
         } else if (response.response.data.code == "LOGIN-002") {
