@@ -12,5 +12,20 @@
       "email": "jdh99080516@gmail.com",
       "password": "jdh"
     }
+  ],
+  "groupList": [
+    { "id": 1, "name": "창의학기제", "memberNum": 3, "kingNum": 1 },
+    {
+      "id": 2,
+      "name": "캡스톤",
+      "memberNum": 4,
+      "kingNum": 1
+    },
+    {
+      "id": 3,
+      "name": "나의 회사",
+      "memberNum": 1000,
+      "kingNum": 20
+    }
   ]
 }
