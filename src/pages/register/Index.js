@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-import api from "../../api/Interceptors";
+import { api } from "../../api/Interceptors";
 import { MyButton, MyTypography, MyLink } from "./style";
-import { useNavigate, NavLink, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
-  //Button,
   CssBaseline,
   TextField,
   FormControl,
   FormControlLabel,
   Checkbox,
-  //FormHelperText,
   Grid,
   Box,
-  //Typography,
   Container,
 } from "@mui/material/";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -27,28 +24,29 @@ const Index = () => {
   const [password2, setPassword2] = useState("");
   const [name, setName] = useState("");
 
+  const goLogin = () => {
+    navigate("/login");
+  };
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     console.log(email);
   };
   const checkEmail = (e) => {
     const emailRegexp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-    if (!emailRegexp.test(e.target.value))
+    if (email !== "" && !emailRegexp.test(e.target.value))
       alert("올바르지 않은 이메일 형식입니다.");
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
-    console.log(password);
   };
   const handlePassword2Change = (e) => {
     setPassword2(e.target.value);
-    console.log(password2);
   };
 
   const handleNameChange = (e) => {
     setName(e.target.value);
-    console.log(name);
   };
   const handeCheckedChange = (e) => {
     setChecked(e.target.value);
@@ -71,7 +69,7 @@ const Index = () => {
     else if (password !== password2)
       alert("비밀번호와 비밀번호 확인 같지 않습니다.\n다시 입력해주세요.");
     else {
-      await axios
+      await api
         .post("/register", body)
         .then((response) => {
           console.log(response);
@@ -116,8 +114,6 @@ const Index = () => {
                     autoFocus
                     fullWidth
                     type="email"
-                    id="email"
-                    name="email"
                     label="이메일 주소"
                     value={email}
                     onChange={handleEmailChange}
@@ -129,8 +125,6 @@ const Index = () => {
                     required
                     fullWidth
                     type="password"
-                    id="password"
-                    name="password"
                     label="비밀번호 (숫자+영문자+특수문자 8자리 이상)"
                     value={password}
                     onChange={handlePasswordChange}
@@ -141,8 +135,6 @@ const Index = () => {
                     required
                     fullWidth
                     type="password"
-                    id="rePassword"
-                    name="rePassword"
                     label="비밀번호 확인"
                     value={password2}
                     onChange={handlePassword2Change}
@@ -162,11 +154,7 @@ const Index = () => {
                 <Grid item xs={12}>
                   <FormControlLabel
                     control={
-                      <Checkbox
-                        onChange={handeCheckedChange}
-                        value={checked}
-                        color="primary"
-                      />
+                      <Checkbox onChange={handeCheckedChange} value={checked} />
                     }
                     label="회원가입 약관에 동의합니다."
                   />
@@ -183,12 +171,7 @@ const Index = () => {
               </MyButton>
             </FormControl>
           </Box>
-          <MyLink
-            component="button"
-            onClick={() => {
-              navigate("/register");
-            }}
-          >
+          <MyLink component="button" onClick={goLogin}>
             이미 회원가입을 했다면? 로그인 하러가기
           </MyLink>
         </Box>
