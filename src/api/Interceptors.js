@@ -1,10 +1,17 @@
 import axios from "axios";
-const api = axios.create({
+export const api = axios.create({
   proxy: {
-    target: `http://192.168.0.7:8080`,
+    baseURL: `http://172.16.61.131:8080`,
   },
-  timeout: 1000,
-  headers: { "Content-type": "application/json" },
+
+  headers: {
+    access_token:
+      localStorage.getItem("jwt_accessToken") &&
+      localStorage.getItem("jwt_accessToken"),
+    refresh_token:
+      localStorage.getItem("jwt_accessToken") &&
+      localStorage.getItem("jwt_refreshToken"),
+  },
 });
 
 // Add a request interceptor
@@ -44,4 +51,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+//  export default api;
