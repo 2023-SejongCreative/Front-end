@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export const api = axios.create({
   proxy: {
     baseURL: `http://172.16.61.131:8080`,
@@ -40,13 +41,19 @@ api.interceptors.response.use(
     // console.log("get response", response);
     return response;
   },
+
   function (error) {
     /*
         http status가 200이 아닌 경우
         응답 에러 처리를 작성합니다.
         .catch() 으로 이어집니다.    
-    */
-    // console.log("response error", error);
+    */ console.log("rtk 만료되었습니다. 자동 로그아웃 됩니다.", error);
+    const navigate = useNavigate();
+    localStorage.removeItem("jwt_accessToken");
+    localStorage.removeItem("jwt_refreshToken");
+    localStorage.setItem("isAuthorized", false);
+    navigate("/login");
+
     return Promise.reject(error);
   }
 );
