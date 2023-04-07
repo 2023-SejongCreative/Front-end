@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { MyButton, MyTypography, MyLink } from "./style";
 import { api } from "../../api/Interceptors";
-import { useNavigate, NavLink, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userSlice } from "../../store/userSlice";
+import { useNavigate } from "react-router-dom";
 import {
   CssBaseline,
   TextField,
@@ -32,7 +33,7 @@ const Index = () => {
     console.log(password);
   };
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   //form 전송
   const handleSubmit = async (e) => {
     let body = {
@@ -57,8 +58,16 @@ const Index = () => {
             "jwt_refreshToken",
             response.headers.refresh_token
           );
-          localStorage.setItem("isAuthorized", true);
-          setTimeout(onSlientRefresh, 1500000);
+          localStorage.setItem("isAuth", true);
+          setTimeout(onSlientRefresh, 5000);
+
+          dispatch(
+            userSlice.actions.login({
+              email: email,
+              password: password,
+              isAuth: true,
+            })
+          );
         } else if (response.response.data.code == "LOGIN-001") {
           alert("일치하는 회원이 없습니다. 먼저 회원가입을 진행해주세요!");
         } else if (response.response.data.code == "LOGIN-002") {
@@ -69,18 +78,24 @@ const Index = () => {
   };
 
   const onSlientRefresh = () => {
-    axios
-      .post("/reissue", {
-        access_token: localStorage.getItem("jwt_accessToken"),
-        refresh_token: localStorage.getItem("jwt_refreshToken"),
-      })
+    api
+      .post(
+        "/reissue",
+        {},
+        {
+          headers: {
+            access_token: localStorage.getItem("jwt_accessToken"),
+            refresh_token: localStorage.getItem("jwt_refreshToken"),
+          },
+        }
+      )
       .then((response) => {
         localStorage.setItem("jwt_accessToken", response.headers.access_token);
         localStorage.setItem(
           "jwt_refreshToken",
           response.headers.refresh_token
         );
-        setInterval(onSlientRefresh, 1500000);
+        setInterval(onSlientRefresh, 5000);
       })
       .catch((err) => {
         console.log(err);
@@ -118,7 +133,7 @@ const Index = () => {
                     type="email"
                     label="이메일 주소를 입력하세요"
                     value={email}
-                    onChange={handleEmailChange}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -128,7 +143,7 @@ const Index = () => {
                     type="password"
                     label="비밀번호를 입력하세요"
                     value={password}
-                    onChange={handlePasswordChange}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </Grid>
               </Grid>
