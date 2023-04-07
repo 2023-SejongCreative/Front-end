@@ -3,7 +3,6 @@ import axios from "axios";
 import { api } from "../../api/Interceptors";
 import { MyButton, MyTypography, MyLink } from "./style";
 import { useNavigate } from "react-router-dom";
-
 import {
   CssBaseline,
   TextField,
@@ -27,30 +26,28 @@ const Index = () => {
   const goLogin = () => {
     navigate("/login");
   };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    console.log(email);
-  };
   const checkEmail = (e) => {
     const emailRegexp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
     if (email !== "" && !emailRegexp.test(e.target.value))
       alert("올바르지 않은 이메일 형식입니다.");
   };
+  // const handleEmailChange = (e) => {
+  //   setEmail(e.target.value);
+  //   console.log(email);
+  // };
+  // const handlePasswordChange = (e) => {
+  //   setPassword(e.target.value);
+  // };
+  // const handlePassword2Change = (e) => {
+  //   setPassword2(e.target.value);
+  // };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-  const handlePassword2Change = (e) => {
-    setPassword2(e.target.value);
-  };
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-  const handeCheckedChange = (e) => {
-    setChecked(e.target.value);
-  };
+  // const handleNameChange = (e) => {
+  //   setName(e.target.value);
+  // };
+  // const handeCheckedChange = (e) => {
+  //   setChecked(e.target.value);
+  // };
   const navigate = useNavigate();
 
   // form 전송
@@ -116,7 +113,7 @@ const Index = () => {
                     type="email"
                     label="이메일 주소"
                     value={email}
-                    onChange={handleEmailChange}
+                    onChange={(e) => setEmail(e.target.value)}
                     onBlur={checkEmail}
                   />
                 </Grid>
@@ -127,7 +124,7 @@ const Index = () => {
                     type="password"
                     label="비밀번호 (숫자+영문자+특수문자 8자리 이상)"
                     value={password}
-                    onChange={handlePasswordChange}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -137,7 +134,7 @@ const Index = () => {
                     type="password"
                     label="비밀번호 확인"
                     value={password2}
-                    onChange={handlePassword2Change}
+                    onChange={(e) => setPassword2(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -148,13 +145,16 @@ const Index = () => {
                     name="name"
                     label="이름(실명)"
                     value={name}
-                    onChange={handleNameChange}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
                     control={
-                      <Checkbox onChange={handeCheckedChange} value={checked} />
+                      <Checkbox
+                        onChange={(e) => setChecked(e.target.value)}
+                        value={checked}
+                      />
                     }
                     label="회원가입 약관에 동의합니다."
                   />
