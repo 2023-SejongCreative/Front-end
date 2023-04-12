@@ -54,7 +54,7 @@ const Index = () => {
             "jwt_refreshToken",
             response.headers.refresh_token
           );
-          localStorage.setItem("isAuth", true);
+          localStorage.setItem("isLogined", true);
           setTimeout(onSlientRefresh, 1500000);
 
           dispatch(
@@ -91,6 +91,7 @@ const Index = () => {
           "jwt_refreshToken",
           response.headers.refresh_token
         );
+        localStorage.setItem("isLogined", true);
         setInterval(onSlientRefresh, 1500000); //25분마다 리이슈 요청
       })
       .catch((err) => {
