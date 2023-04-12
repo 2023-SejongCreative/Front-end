@@ -11,8 +11,13 @@ import SideBarAtHome from "../../components/SideBarAtHome";
 
 const Index = () => {
   // const user_email = useSelector((state) => state.user.email);
-  // // const navigate = useNavigate();
+  const navigate = useNavigate();
   // // const dispatch = useDispatch();
+  useEffect(() => {
+    let isLogined = localStorage.getItem("isLogined");
+    console.log(isLogined);
+    if (!isLogined) navigate("/login");
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
