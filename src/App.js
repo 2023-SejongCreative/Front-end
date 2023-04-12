@@ -9,7 +9,7 @@ import Room from "./pages/room/Room";
 
 function App() {
   // let isAuth = useSelector((state) => state.user.isAuth);
-
+  let isAuth = localStorage.getItem("isAuth");
   const onSlientRefresh = () => {
     api
       .post("/reissue", {
@@ -22,6 +22,7 @@ function App() {
           "jwt_refreshToken",
           response.headers.refresh_token
         );
+        localStorage.setItem("isLogined", true);
         setInterval(onSlientRefresh, 1500000); //25분마다 리이슈 요청
       })
       .catch((err) => {
@@ -37,7 +38,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" isAuth element={<Home></Home>}></Route>
+          <Route path="/" element={<Home></Home>}></Route>
           <Route path="/login" element={<Login></Login>}></Route>
           <Route path="/register" element={<Register></Register>}></Route>
           <Route path="/group/:group_id" element={<Group></Group>}></Route>
