@@ -12,9 +12,9 @@ const Group = () => {
   const group_name = location.state.group_name;
   const groups = location.state.groups;
   const groupNames = location.state.groupNames;
-  console.log(groups);
-  console.log(group_name);
-  console.log("그룹 페이지 별 그룹 아이디 : ", group_id);
+  // console.log(groups);
+  // console.log(group_name);
+  // console.log("그룹 페이지 별 그룹 아이디 : ", group_id);
   return (
     <div>
       <Header />

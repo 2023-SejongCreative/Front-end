@@ -9,6 +9,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
 import { groupSlice } from "../store/groupSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ModalInviteGroup from "./ModalInviteGroup";
@@ -166,9 +168,10 @@ const SideBarAtGroup = (props) => {
         variant="permanent"
         anchor="left"
       >
-        <MyTitle>waffle</MyTitle>
+        <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
+
         <List>
           <div>{group_name}</div>
           {groupNames.map((text, index) => (
@@ -178,6 +181,9 @@ const SideBarAtGroup = (props) => {
               </ListItemButton>
             </ListItem>
           ))}
+        </List>
+        <Divider />
+        <List>
           {roomNames.map((text, index) => (
             <ListItem key={index}>
               <ListItemButton onClick={() => moveRoomPage(text)}>

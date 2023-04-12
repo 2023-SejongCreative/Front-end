@@ -7,10 +7,10 @@
     { "manager": 1, "group_name": "그룹5", "group_id": 17 }
   ],
   "rooms": [
-    { "group_id": 6, "room_id": 1, "room_name": "프론트" },
-    { "group_id": 6, "room_id": 2, "room_name": "백엔드" },
-    { "group_id": 10, "room_id": 3, "room_name": "캡스톤ai" },
-    { "group_id": 10, "room_id": 1, "room_name": "캡스톤백엔드" },
-    { "group_id": 10, "room_id": 2, "room_name": "캡스톤프론트" }
+    { "group_id": 6, "room_id": 1, "room_name": "룸1" },
+    { "group_id": 6, "room_id": 2, "room_name": "룸2" },
+    { "group_id": 10, "room_id": 3, "room_name": "룸3" },
+    { "group_id": 10, "room_id": 1, "room_name": "룸4" },
+    { "group_id": 10, "room_id": 2, "room_name": "룸5" }
   ]
 }

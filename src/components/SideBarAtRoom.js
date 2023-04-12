@@ -8,6 +8,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
 import { groupSlice } from "../store/groupSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ModalInviteRoom from "./ModalInviteRoom";
@@ -57,6 +59,21 @@ const LogoutBtn = styled.button`
 const drawerWidth = 240;
 let roomName = [];
 const SideBarRoom = (props) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const open = Boolean(anchorEl);
+  const handleClickListItem = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const { room_id } = useParams();
   const { room_name, rooms, group_id, groups, groupNames } = props;
 
@@ -143,17 +160,68 @@ const SideBarRoom = (props) => {
         variant="permanent"
         anchor="left"
       >
-        <MyTitle>waffle</MyTitle>
+        <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
-        {console.log(groupNames)}
-        {groupNames.map((text, index) => (
-          <ListItem key={index}>
-            <ListItemButton onClick={() => moveGroupPage(text)}>
-              <ListItemText primary={text} />
-            </ListItemButton>
+        {/* <List
+          component="nav"
+          aria-label="Device settings"
+          sx={{ bgcolor: "background.paper" }}
+        >
+          <ListItem
+            button
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClickListItem}
+          >
+            <ListItemText
+              primary="그룹 리스트"
+              secondary={groupNames[selectedIndex]}
+            />
           </ListItem>
-        ))}
+        </List>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            role: "listbox",
+          }}
+        >
+          {groupNames.map((text, index) => (
+            <ListItem onClick={() => moveGroupPage(text)}>
+              <MenuItem
+                key={text}
+                selected={index === selectedIndex}
+                onClick={(event) => handleMenuItemClick(event, index)}
+              >
+                {text}
+              </MenuItem>
+            </ListItem>
+          ))}
+        </Menu> */}
+
+        <List>
+          {groupNames.map((text, index) => (
+            <ListItem key={index}>
+              <ListItemButton onClick={() => moveGroupPage(text)}>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+
+        {/* {roomNames.map((text, index) => (
+          <ListItem onClick={() => moveRoomPage(text)}>
+            <MenuItem
+              key={text}
+              selected={index === selectedIndex}
+              onClick={(event) => handleMenuItemClick(event, index)}
+            >
+              {text}
+            </MenuItem>
+          </ListItem>
+        ))} */}
         <List>
           <div onClick={() => navigate(`/room/${room_id}`)}>{room_name}</div>
           {roomNames.map((text, index) => (

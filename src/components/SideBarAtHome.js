@@ -9,6 +9,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
 import { groupSlice } from "../store/groupSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Myspace from "./Myspace";
@@ -126,7 +128,7 @@ const SideBar = (props) => {
         variant="permanent"
         anchor="left"
       >
-        <MyTitle>waffle</MyTitle>
+        <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
 
@@ -146,7 +148,7 @@ const SideBar = (props) => {
         </List>
         <ModalCreate />
         <BtnWrapper>
-          <DeleteBtn>-&nbsp;Group Delete</DeleteBtn>
+          {" "}
           <LogoutBtn onClick={Logout}>Logout</LogoutBtn>
         </BtnWrapper>
       </Drawer>
