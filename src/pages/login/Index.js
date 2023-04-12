@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { MyButton, MyTypography, MyLink } from "./style";
 import { api } from "../../api/Interceptors";
 import { useDispatch } from "react-redux";
@@ -23,15 +24,6 @@ const Index = () => {
 
   const theme = createTheme();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    console.log(email);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    console.log(password);
-  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   //form 전송
@@ -46,8 +38,12 @@ const Index = () => {
       .post("/login", body)
       .then((response) => {
         console.log(response);
-        if (response.status == 200) {
+        if (response.status === 200) {
           alert("로그인 완료! Waffle에 오신걸 환영합니다❤️");
+
+          //새로고침하면 axios network 에러나는 문제를 해결하기 위해 defaults.headers에 넣어줌
+          axios.defaults.headers.common["access_token"] =
+            response.headers.access_token;
           navigate("/");
 
           localStorage.setItem(
@@ -59,7 +55,7 @@ const Index = () => {
             response.headers.refresh_token
           );
           localStorage.setItem("isAuth", true);
-          setTimeout(onSlientRefresh, 5000);
+          setTimeout(onSlientRefresh, 1500000);
 
           dispatch(
             userSlice.actions.login({
@@ -68,9 +64,9 @@ const Index = () => {
               isAuth: true,
             })
           );
-        } else if (response.response.data.code == "LOGIN-001") {
+        } else if (response.response.data.code === "LOGIN-001") {
           alert("일치하는 회원이 없습니다. 먼저 회원가입을 진행해주세요!");
-        } else if (response.response.data.code == "LOGIN-002") {
+        } else if (response.response.data.code === "LOGIN-002") {
           alert("비밀번호가 일치하지 않습니다.");
         }
       })
@@ -95,7 +91,7 @@ const Index = () => {
           "jwt_refreshToken",
           response.headers.refresh_token
         );
-        setInterval(onSlientRefresh, 5000);
+        setInterval(onSlientRefresh, 1500000); //25분마다 리이슈 요청
       })
       .catch((err) => {
         console.log(err);
