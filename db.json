@@ -1,31 +1,16 @@
 {
-  "token": {
-    "access_token": "9k3kljnslkdj_34lk2j34lks09sv",
-    "userId": 123
-  },
-  "userData": [
-    {
-      "email": "jh06103@naver.com",
-      "password": "jh"
-    },
-    {
-      "email": "jdh99080516@gmail.com",
-      "password": "jdh"
-    }
+  "groups": [
+    { "manager": 1, "group_name": "창의학기제", "group_id": 6 },
+    { "manager": 1, "group_name": "캡스톤", "group_id": 10 },
+    { "manager": 1, "group_name": "동아리", "group_id": 13 },
+    { "manager": 1, "group_name": "회사", "group_id": 15 },
+    { "manager": 1, "group_name": "그룹5", "group_id": 17 }
   ],
-  "groupList": [
-    { "id": 1, "name": "창의학기제", "memberNum": 3, "kingNum": 1 },
-    {
-      "id": 2,
-      "name": "캡스톤",
-      "memberNum": 4,
-      "kingNum": 1
-    },
-    {
-      "id": 3,
-      "name": "나의 회사",
-      "memberNum": 1000,
-      "kingNum": 20
-    }
+  "rooms": [
+    { "group_id": 6, "room_id": 1, "room_name": "프론트" },
+    { "group_id": 6, "room_id": 2, "room_name": "백엔드" },
+    { "group_id": 10, "room_id": 3, "room_name": "캡스톤ai" },
+    { "group_id": 10, "room_id": 1, "room_name": "캡스톤백엔드" },
+    { "group_id": 10, "room_id": 2, "room_name": "캡스톤프론트" }
   ]
 }
