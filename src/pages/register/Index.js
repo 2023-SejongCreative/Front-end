@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { api } from "../../api/Interceptors";
 import { MyButton, MyTypography, MyLink } from "./style";
 import { useNavigate } from "react-router-dom";
@@ -58,11 +57,11 @@ const Index = () => {
       password: password,
       name: name,
     };
-    if (email == "") alert("이메일을 입력해주세요");
-    else if (password == "") alert("비밀번호를 입력해주세요");
-    else if (password2 == "") alert("비밀번호 확인를 입력해주세요");
-    else if (name == "") alert("이름을 입력해주세요");
-    else if (checked == false) alert("회원가입 약관에 동의해주세요");
+    if (email === "") alert("이메일을 입력해주세요");
+    else if (password === "") alert("비밀번호를 입력해주세요");
+    else if (password2 === "") alert("비밀번호 확인를 입력해주세요");
+    else if (name === "") alert("이름을 입력해주세요");
+    else if (checked === false) alert("회원가입 약관에 동의해주세요");
     else if (password !== password2)
       alert("비밀번호와 비밀번호 확인 같지 않습니다.\n다시 입력해주세요.");
     else {
@@ -71,10 +70,10 @@ const Index = () => {
         .then((response) => {
           console.log(response);
 
-          if (response.status == 200) {
+          if (response.status === 200) {
             alert("회원가입에 성공하셨습니다. 로그인을 진행해주세요! ");
             navigate("/login");
-          } else if (response.status == 400) {
+          } else if (response.status === 400) {
             alert("이미 회원가입 완료한 이메일입니다.");
           }
         })
