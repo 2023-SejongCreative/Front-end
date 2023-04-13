@@ -55,14 +55,19 @@ const ModalRoom = (props) => {
     let body = {
       room_name: room_name,
       type: type,
-      email: email,
     };
+
     await api
       .post(`/${group_id}/createroom`, body)
       .then((response) => {
         console.log(response);
-        // let group_id = response.data.id;
-        // navigate("/group");
+        let room_id = response.data;
+        console.log(room_id);
+        // navigate(`/room/${room_id}`, {
+        //   state: { group_id: group_id, room_name: room_name },
+        // });
+        handleClose();
+        window.location.reload();
       })
       .catch((err) => console.log(err));
   };
