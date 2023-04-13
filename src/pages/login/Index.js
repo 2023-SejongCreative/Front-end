@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { MyButton, MyTypography, MyLink } from "./style";
 import { api } from "../../api/Interceptors";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import {
@@ -44,7 +44,7 @@ const Index = () => {
           //새로고침하면 axios network 에러나는 문제를 해결하기 위해 defaults.headers에 넣어줌
           axios.defaults.headers.common["access_token"] =
             response.headers.access_token;
-          navigate("/");
+          navigate("/", { state: { user_email: email } });
 
           localStorage.setItem(
             "jwt_accessToken",
@@ -55,6 +55,7 @@ const Index = () => {
             response.headers.refresh_token
           );
           localStorage.setItem("isLogined", true);
+          localStorage.setItem("email", email);
           setTimeout(onSlientRefresh, 1500000);
 
           dispatch(
