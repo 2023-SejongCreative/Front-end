@@ -59,6 +59,8 @@ const ModalGroup = (props) => {
         console.log(response);
         let group_id = response.data;
         navigate(`/group/${group_id}`);
+        handleClose();
+        window.location.reload();
       })
       .catch((err) => console.log(err));
   };
