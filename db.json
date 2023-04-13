@@ -10,7 +10,7 @@
     { "group_id": 6, "room_id": 1, "room_name": "룸1" },
     { "group_id": 6, "room_id": 2, "room_name": "룸2" },
     { "group_id": 10, "room_id": 3, "room_name": "룸3" },
-    { "group_id": 10, "room_id": 1, "room_name": "룸4" },
-    { "group_id": 10, "room_id": 2, "room_name": "룸5" }
+    { "group_id": 10, "room_id": 4, "room_name": "룸4" },
+    { "group_id": 10, "room_id": 5, "room_name": "룸5" }
   ]
 }
