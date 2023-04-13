@@ -58,21 +58,37 @@ const LogoutBtn = styled.button`
 const drawerWidth = 240;
 let groupName = [];
 const SideBar = (props) => {
-  const user_email = useSelector((state) => state.user.email);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const open = Boolean(anchorEl);
+  const handleClickListItem = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const user_email = localStorage.getItem("email");
   const [groupNames, setGroupNames] = useState([]);
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(user_email);
     api
-      // .get(`/${user_email}/groups`)
-      .get(`/groups`)
+      .get(`/${user_email}/groups`)
+      // .get(`/groups`)
       .then((response) => {
         console.log(response);
-        // setGroups(response.data.groups);
-        setGroups(response.data);
-        response.data.forEach((v) => {
+        setGroups(response.data.groups);
+        // setGroups(response.data);
+        response.data.groups.forEach((v) => {
           groupName.push(v["group_name"]);
         });
         setGroupNames(groupName);
@@ -112,6 +128,7 @@ const SideBar = (props) => {
     navigate(`/group/${group_id}`, {
       state: { group_name: text, groups: groups, groupNames: groupNames },
     });
+    window.location.reload();
   };
 
   return (
@@ -131,7 +148,40 @@ const SideBar = (props) => {
         <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
-
+        {/* <List
+          component="nav"
+          aria-label="Device settings"
+          sx={{ bgcolor: "background.paper" }}
+        >
+          <ListItem
+            button
+            aria-haspopup="listbox"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClickListItem}
+          >
+            <ListItemText secondary={groupNames[selectedIndex]} />
+          </ListItem>
+        </List>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            role: "listbox",
+          }}
+        >
+          {groupNames.map((text, index) => (
+            <ListItem onClick={() => moveGroupPage(text)}>
+              <MenuItem
+                key={text}
+                selected={index === selectedIndex}
+                onClick={(event) => handleMenuItemClick(event, index)}
+              >
+                {text}
+              </MenuItem>
+            </ListItem>
+          ))}
+        </Menu> */}
         <List>
           {groupNames.map((text, index) => (
             <ListItem
