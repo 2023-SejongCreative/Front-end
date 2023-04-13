@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 //   localStorage.getItem("jwt_accessToken");
 export const api = axios.create({
   proxy: {
-    baseURL: `http://localhost:4000`,
+    baseURL: `http://172.16.61.131:8080`,
   },
 
   headers: {
