@@ -55,6 +55,7 @@ const ModalInviteRoom = (props) => {
         console.log(response);
         if (response.status === 200)
           alert(`${inviteEmail} 님을 초대하였습니다.`);
+        handleClose();
       })
       .catch((err) => console.log(err));
   };
