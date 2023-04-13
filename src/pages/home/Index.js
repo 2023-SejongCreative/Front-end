@@ -1,18 +1,21 @@
 import React from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { api } from "../../api/Interceptors";
 import ModalCreate from "../../components/ModalGroup";
+import { userSlice } from "../../store/userSlice";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Header from "../../components/header/Header";
 import SideBarAtHome from "../../components/SideBarAtHome";
 
 const Index = () => {
-  // const user_email = useSelector((state) => state.user.email);
+  const user_email = localStorage.getItem("email");
+  console.log(user_email);
+  const location = useLocation();
   const navigate = useNavigate();
-  // // const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   useEffect(() => {
     let isLogined = localStorage.getItem("isLogined");
     console.log(isLogined);
