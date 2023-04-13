@@ -61,6 +61,21 @@ const drawerWidth = 240;
 let roomName = [],
   groupName = [];
 const SideBarAtGroup = (props) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const open = Boolean(anchorEl);
+  const handleClickListItem = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const { group_id } = useParams();
   const { group_name, groups, groupNames } = props;
   const [rooms, setRooms] = useState([]);
@@ -82,14 +97,14 @@ const SideBarAtGroup = (props) => {
 
     //룸 목록 요청 api
     api
-      // .get(`/${group_id}/rooms`)
-      .get(`/rooms`)
+      .get(`/${group_id}/rooms`)
+      // .get(`/rooms`)
       .then((response) => {
         console.log(response);
-        // setRooms(response.data.rooms);
-        setRooms(response.data);
+        setRooms(response.data.room);
+        // setRooms(response.data);
 
-        response.data.forEach((v) => {
+        response.data.room.forEach((v) => {
           roomName.push(v["room_name"]);
         });
         setRoomNames(roomName);
@@ -99,17 +114,27 @@ const SideBarAtGroup = (props) => {
   }, []);
 
   const DeleteGroup = async () => {
-    if (window.confirm(`${group_name} 그룹을 삭제하시겠습니까?`)) {
-      await api
-        .delete(`/${group_id}/deleteroom`)
-        .then((response) => {
-          console.log(response);
-          if (response.status === 200) alert("그룹 삭제가 완료되었습니다.");
-          else alert("관리자가 아닙니다!");
-        })
-        .catch((err) => console.log(err));
+    let index;
+    groups.forEach((v, i) => {
+      if (v.group_id == group_id) index = i;
+    });
+    if (groups[index].manager !== 1) {
+      alert("관리자만 삭제할 수 있습니다.");
     } else {
-      alert("룸 삭제를 취소하셨습니다.");
+      if (window.confirm(`${group_name} 그룹을 삭제하시겠습니까?`)) {
+        await api
+          .delete(`/${group_id}/deletegroup`)
+          .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+              alert("그룹 삭제가 완료되었습니다.");
+              navigate("/");
+            } else alert("관리자가 아닙니다!");
+          })
+          .catch((err) => console.log(err));
+      } else {
+        alert("룸 삭제를 취소하셨습니다.");
+      }
     }
   };
 
@@ -140,6 +165,7 @@ const SideBarAtGroup = (props) => {
     navigate(`/group/${group_id}`, {
       state: { groups: groups, group_name: text, groupNames: groupNames },
     });
+    window.location.reload();
   };
   const moveRoomPage = async (text) => {
     let room_id = rooms[roomNames.indexOf(text)].room_id;
@@ -152,6 +178,7 @@ const SideBarAtGroup = (props) => {
         groupNames: groupNames,
       },
     });
+    window.location.reload();
   };
   // const group_id = useSelector((state) => state.list.groupList);
   return (
@@ -171,6 +198,40 @@ const SideBarAtGroup = (props) => {
         <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
+        {/* <List
+          component="nav"
+          aria-label="Device settings"
+          sx={{ bgcolor: "background.paper" }}
+        >
+          <ListItem
+            button
+            aria-haspopup="listbox"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClickListItem}
+          >
+            <ListItemText secondary={groupNames[selectedIndex]} />
+          </ListItem>
+        </List>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            role: "listbox",
+          }}
+        >
+          {groupNames.map((text, index) => (
+            <ListItem onClick={() => moveGroupPage(text)}>
+              <MenuItem
+                key={text}
+                selected={index === selectedIndex}
+                onClick={(event) => handleMenuItemClick(event, index)}
+              >
+                {text}
+              </MenuItem>
+            </ListItem>
+          ))}
+        </Menu> */}
 
         <List>
           <div>{group_name}</div>
@@ -196,9 +257,15 @@ const SideBarAtGroup = (props) => {
         <BtnWrapper>
           <ModalInviteGroup group_id={group_id} />
         </BtnWrapper>
-        <ModalRoom group_id={group_id} />
+        <ModalRoom
+          group_id={group_id}
+          groups={groups}
+          rooms={rooms}
+          roomNames={roomNames}
+          groupNames={groupNames}
+        />
         <BtnWrapper>
-          <DeleteBtn onClick={DeleteGroup}>-&nbsp;Room Delete</DeleteBtn>
+          <DeleteBtn onClick={DeleteGroup}>-&nbsp;Group Delete</DeleteBtn>
           <LogoutBtn onClick={Logout}>Logout</LogoutBtn>
         </BtnWrapper>
       </Drawer>
