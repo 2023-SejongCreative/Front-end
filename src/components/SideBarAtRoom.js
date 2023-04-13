@@ -76,12 +76,10 @@ const SideBarRoom = (props) => {
   };
   const { room_id } = useParams();
   const { room_name, rooms, group_id, groups, groupNames } = props;
-
   const [roomNames, setRoomNames] = useState([]);
   const user_email = useSelector((state) => state.user.email);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(rooms);
 
   useEffect(() => {
     rooms.forEach((v) => {
@@ -91,17 +89,26 @@ const SideBarRoom = (props) => {
   }, []);
 
   const DeleteRoom = async () => {
-    if (window.confirm(`${room_name} 룸을 삭제하시겠습니까?`)) {
-      await api
-        .delete(`/${room_id}/deleteroom`)
-        .then((response) => {
-          console.log(response);
-          if (response.status === 200) alert("룸 삭제가 완료되었습니다.");
-          else alert("관리자가 아닙니다!");
-        })
-        .catch((err) => console.log(err));
-    } else {
-      alert("룸 삭제를 취소하셨습니다.");
+    let index;
+    rooms.forEach((v, i) => {
+      if (v.room_id == room_id) index = i;
+    });
+    if (rooms[index].manager !== 1) alert("관리자만 삭제할 수 있습니다.");
+    else {
+      if (window.confirm(`${room_name} 룸을 삭제하시겠습니까?`)) {
+        await api
+          .delete(`/${room_id}/deleteroom`)
+          .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+              alert("룸 삭제가 완료되었습니다.");
+              navigate("/");
+            } else alert("관리자가 아닙니다!");
+          })
+          .catch((err) => console.log(err));
+      } else {
+        alert("룸 삭제를 취소하셨습니다.");
+      }
     }
   };
 
@@ -163,6 +170,7 @@ const SideBarRoom = (props) => {
         <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
+
         {/* <List
           component="nav"
           aria-label="Device settings"
@@ -170,13 +178,11 @@ const SideBarRoom = (props) => {
         >
           <ListItem
             button
+            aria-haspopup="listbox"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClickListItem}
           >
-            <ListItemText
-              primary="그룹 리스트"
-              secondary={groupNames[selectedIndex]}
-            />
+            <ListItemText secondary={groupNames[selectedIndex]} />
           </ListItem>
         </List>
         <Menu
@@ -199,6 +205,7 @@ const SideBarRoom = (props) => {
             </ListItem>
           ))}
         </Menu> */}
+        <Divider />
 
         <List>
           {groupNames.map((text, index) => (
@@ -211,17 +218,6 @@ const SideBarRoom = (props) => {
         </List>
         <Divider />
 
-        {/* {roomNames.map((text, index) => (
-          <ListItem onClick={() => moveRoomPage(text)}>
-            <MenuItem
-              key={text}
-              selected={index === selectedIndex}
-              onClick={(event) => handleMenuItemClick(event, index)}
-            >
-              {text}
-            </MenuItem>
-          </ListItem>
-        ))} */}
         <List>
           <div onClick={() => navigate(`/room/${room_id}`)}>{room_name}</div>
           {roomNames.map((text, index) => (
