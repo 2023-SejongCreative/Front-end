@@ -115,7 +115,7 @@ const SideBar = (props) => {
         console.log(response);
         localStorage.removeItem("jwt_accessToken");
         localStorage.removeItem("jwt_refreshToken");
-        localStorage.setItem("isAuth", false);
+        localStorage.setItem("isLogined", false);
         alert("로그아웃 성공! 다음에 또 만나요❤️");
         navigate("/login");
       })
