@@ -17,6 +17,9 @@ export const HeaderBtn = styled.button`
   :hover {
     background-color: rgba(245, 182, 108, 0.1);
   }
+  ::after {
+    background-color: rgba(245, 182, 108, 0.1);
+  }
 `;
 export const MyTitle = styled.h1`
   margin: 0;
@@ -27,6 +30,10 @@ export const MyTitle = styled.h1`
 const drawerWidth = 240;
 const Header = () => {
   const navigate = useNavigate();
+  const moveChat = () => {
+    localStorage.setItem("isChatDefault", true);
+    navigate("/chat/default");
+  };
   return (
     <div>
       {" "}
@@ -36,9 +43,11 @@ const Header = () => {
         sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
       >
         <MyToolbar>
-          <HeaderBtn>일정</HeaderBtn>
-          <HeaderBtn>프로필</HeaderBtn>
-          <HeaderBtn onClick={() => navigate("/chat/default")}>채팅</HeaderBtn>
+          <HeaderBtn id="일정">일정</HeaderBtn>
+          <HeaderBtn id="프로필">프로필</HeaderBtn>
+          <HeaderBtn id="채팅" onClick={moveChat}>
+            채팅
+          </HeaderBtn>
         </MyToolbar>
       </AppBar>
     </div>
