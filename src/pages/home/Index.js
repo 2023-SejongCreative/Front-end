@@ -8,7 +8,7 @@ import { userSlice } from "../../store/userSlice";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Header from "../../components/header/Header";
-import SideBarAtHome from "../../components/SideBarAtHome";
+import SideBarAtHome from "../../components/sidebar/SideBarAtHome";
 
 const Index = () => {
   const user_email = localStorage.getItem("email");

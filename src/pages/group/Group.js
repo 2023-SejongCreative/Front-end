@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../../components/header/Header";
-import SideBarAtGroup from "../../components/SideBarAtGroup";
+import SideBarAtGroup from "../../components/sidebar/SideBarAtGroup";
 import ModalRoom from "../../components/ModalRoom";
 import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";

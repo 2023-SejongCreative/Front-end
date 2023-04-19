@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Toolbar, CssBaseline, AppBar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const MyToolbar = styled(Toolbar)`
   background-color: white;
@@ -25,6 +26,7 @@ export const MyTitle = styled.h1`
 `;
 const drawerWidth = 240;
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <div>
       {" "}
@@ -36,7 +38,7 @@ const Header = () => {
         <MyToolbar>
           <HeaderBtn>일정</HeaderBtn>
           <HeaderBtn>프로필</HeaderBtn>
-          <HeaderBtn>채팅</HeaderBtn>
+          <HeaderBtn onClick={() => navigate("/chat/default")}>채팅</HeaderBtn>
         </MyToolbar>
       </AppBar>
     </div>

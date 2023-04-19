@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import ModalRoom from "./ModalRoom";
+import ModalRoom from "../ModalRoom";
 import { useNavigate, useParams } from "react-router-dom";
-import { api } from "../api/Interceptors";
+import { api } from "../../api/Interceptors";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -11,10 +11,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { groupSlice } from "../store/groupSlice";
+import { groupSlice } from "../../store/groupSlice";
 import { useDispatch, useSelector } from "react-redux";
-import ModalInviteGroup from "./ModalInviteGroup";
-import Myspace from "./Myspace";
+import ModalInviteGroup from "../ModalInviteGroup";
+import Myspace from "../Myspace";
 
 export const MyTitle = styled.h1`
   margin: 0;

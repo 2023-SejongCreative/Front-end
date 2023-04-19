@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../../components/header/Header";
-import SideBarAtRoom from "../../components/SideBarAtRoom";
+import SideBarAtRoom from "../../components/sidebar/SideBarAtRoom";
 import ModalRoom from "../../components/ModalRoom";
 import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import ModalCreate from "./ModalGroup";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api/Interceptors";
+import { useNavigate, useParams } from "react-router-dom";
+import { api } from "../../api/Interceptors";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -11,9 +10,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { groupSlice } from "../store/groupSlice";
+import { groupSlice } from "../../store/groupSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Myspace from "./Myspace";
+import ModalInviteRoom from "../ModalInviteRoom";
+import Myspace from "../Myspace";
 
 export const MyTitle = styled.h1`
   margin: 0;
@@ -24,6 +24,7 @@ export const MyTitle = styled.h1`
 const BtnWrapper = styled.div`
   text-align: center;
 `;
+
 const DeleteBtn = styled.div`
   width: 200px;
   height: 50px;
@@ -44,9 +45,9 @@ const DeleteBtn = styled.div`
 const LogoutBtn = styled.button`
   width: 200px;
   height: 50px;
-  border-radius: 10px;
   border: solid 1px #f5b66c;
   background-color: white;
+  border-radius: 10px;
   font-size: 20px;
   font-weight: bold;
   margin: auto;
@@ -56,8 +57,8 @@ const LogoutBtn = styled.button`
   margin-top: 10px;
 `;
 const drawerWidth = 240;
-let groupName = [];
-const SideBar = (props) => {
+let roomName = [];
+const SideBarRoom = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const open = Boolean(anchorEl);
@@ -73,32 +74,44 @@ const SideBar = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const user_email = localStorage.getItem("email");
-  const [groupNames, setGroupNames] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const { room_id } = useParams();
+  const { room_name, rooms, group_id, groups, groupNames } = props;
+  const [roomNames, setRoomNames] = useState([]);
+  const user_email = useSelector((state) => state.user.email);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(user_email);
-    api
-      .get(`/${user_email}/groups`)
-      // .get(`/groups`)
-      .then((response) => {
-        console.log(response);
-        setGroups(response.data.groups);
-        // setGroups(response.data);
-        response.data.groups.forEach((v) => {
-          groupName.push(v["group_name"]);
-        });
-        setGroupNames(groupName);
-      })
-      //
-      .catch((err) => console.log(err));
+    rooms.forEach((v) => {
+      roomName.push(v["room_name"]);
+    });
+    setRoomNames(roomName);
   }, []);
 
-  console.log(groupNames);
-  console.log(groups);
+  const DeleteRoom = async () => {
+    let index;
+    rooms.forEach((v, i) => {
+      if (v.room_id == room_id) index = i;
+    });
+    if (rooms[index].manager !== 1) alert("관리자만 삭제할 수 있습니다.");
+    else {
+      if (window.confirm(`${room_name} 룸을 삭제하시겠습니까?`)) {
+        await api
+          .delete(`/${room_id}/deleteroom`)
+          .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+              alert("룸 삭제가 완료되었습니다.");
+              navigate("/");
+            } else alert("관리자가 아닙니다!");
+          })
+          .catch((err) => console.log(err));
+      } else {
+        alert("룸 삭제를 취소하셨습니다.");
+      }
+    }
+  };
+
   const Logout = () => {
     api
       .post(
@@ -122,15 +135,24 @@ const SideBar = (props) => {
       .catch((err) => console.log(err));
   };
   const moveGroupPage = async (text) => {
-    console.log(text);
     let group_id = groups[groupNames.indexOf(text)].group_id;
-    console.log(group_id);
     navigate(`/group/${group_id}`, {
-      state: { group_name: text, groups: groups, groupNames: groupNames },
+      state: { groups: groups, group_name: text, groupNames: groupNames },
     });
-    window.location.reload();
   };
-
+  const moveRoomPage = async (text) => {
+    let room_id = rooms[roomNames.indexOf(text)].room_id;
+    navigate(`/room/${room_id}`, {
+      state: {
+        rooms: rooms,
+        room_name: text,
+        group_id: group_id,
+        groups: groups,
+        groupNames: groupNames,
+      },
+    });
+  };
+  // const group_id = useSelector((state) => state.list.groupList);
   return (
     <div>
       <Drawer
@@ -148,6 +170,7 @@ const SideBar = (props) => {
         <MyTitle onClick={() => navigate("/")}>waffle</MyTitle>
         <Divider />
         {/* <Myspace /> */}
+
         {/* <List
           component="nav"
           aria-label="Device settings"
@@ -182,23 +205,32 @@ const SideBar = (props) => {
             </ListItem>
           ))}
         </Menu> */}
+        <Divider />
+
         <List>
           {groupNames.map((text, index) => (
-            <ListItem
-              key={index}
-              onClick={() => {
-                moveGroupPage(text);
-              }}
-            >
-              <ListItemButton>
+            <ListItem key={index}>
+              <ListItemButton onClick={() => moveGroupPage(text)}>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-        <ModalCreate />
+        <Divider />
+
+        <List>
+          <div onClick={() => navigate(`/room/${room_id}`)}>{room_name}</div>
+          {roomNames.map((text, index) => (
+            <ListItem key={index}>
+              <ListItemButton onClick={() => moveRoomPage(text)}>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
         <BtnWrapper>
-          {" "}
+          <ModalInviteRoom room_id={room_id} />
+          <DeleteBtn onClick={DeleteRoom}>-&nbsp;Room Delete</DeleteBtn>
           <LogoutBtn onClick={Logout}>Logout</LogoutBtn>
         </BtnWrapper>
       </Drawer>
@@ -206,4 +238,4 @@ const SideBar = (props) => {
   );
 };
 
-export default SideBar;
+export default SideBarRoom;

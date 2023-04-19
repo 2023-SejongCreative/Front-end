@@ -5,6 +5,7 @@ import Login from "./pages/login/Index";
 import Register from "./pages/register/Index";
 import Group from "./pages/group/Group";
 import Room from "./pages/room/Room";
+import Chat from "./pages/chat/Chat";
 // import { useSelector } from "react-redux";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/register" element={<Register></Register>}></Route>
           <Route path="/group/:group_id" element={<Group></Group>}></Route>
           <Route path="/room/:room_id" element={<Room></Room>}></Route>
+          <Route path="/chat/:dm_id" element={<Chat></Chat>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
