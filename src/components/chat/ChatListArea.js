@@ -12,11 +12,13 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 export default function ChatListArea(props) {
+  const { chatList } = props;
   const navigate = useNavigate();
   const [color, setColor] = useState("white");
 
   const friend = "세종이";
   const friendSay = "이번 주에 뭐하고 놀거야?";
+  useEffect(() => {}, []);
 
   const moveDMRoom = () => {
     localStorage.setItem("isChatDefault", false);
@@ -41,18 +43,24 @@ export default function ChatListArea(props) {
 
         {/* 채팅 리스트들 나열 시작 */}
         <List>
-          <MyListItem
-            alignItems="flex-start"
-            // 클릭하면 dm id 넘겨주기
-            onClick={() => moveDMRoom()}
-          >
-            <ListItemText primary={friend} secondary={friendSay} />
-          </MyListItem>
-          <Divider
-            sx={{
-              borderColor: "DarkGrey",
-            }}
-          />
+          {chatList.map((v, i) => (
+            <List>
+              ({" "}
+              <MyListItem
+                alignItems="flex-start"
+                // 클릭하면 dm id 넘겨주기
+                onClick={() => moveDMRoom()}
+              >
+                <ListItemText primary={v.name} secondary={v.lastChat} />
+              </MyListItem>
+              <Divider
+                sx={{
+                  borderColor: "DarkGrey",
+                }}
+              />
+              )
+            </List>
+          ))}
         </List>
       </List>
     </>
