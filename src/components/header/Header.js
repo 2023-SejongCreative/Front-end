@@ -32,7 +32,7 @@ const Header = () => {
   const navigate = useNavigate();
   const moveChat = () => {
     localStorage.setItem("isChatDefault", true);
-    navigate("/chat/default");
+    navigate("/chat");
   };
   return (
     <div>
