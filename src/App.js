@@ -6,6 +6,7 @@ import Register from "./pages/register/Index";
 import Group from "./pages/group/Group";
 import Room from "./pages/room/Room";
 import ChatPage from "./pages/chat/ChatPage";
+import ChatDetail from "./pages/chat/ChatDetail";
 // import { useSelector } from "react-redux";
 
 function App() {
@@ -44,7 +45,11 @@ function App() {
           <Route path="/register" element={<Register></Register>}></Route>
           <Route path="/group/:group_id" element={<Group></Group>}></Route>
           <Route path="/room/:room_id" element={<Room></Room>}></Route>
-          <Route path="/chat/:dm_id" element={<ChatPage></ChatPage>}></Route>
+          <Route path="/chat" element={<ChatPage></ChatPage>}></Route>
+          <Route
+            path="/chat/:dm_id"
+            element={<ChatDetail></ChatDetail>}
+          ></Route>
         </Routes>
       </BrowserRouter>
     </div>
