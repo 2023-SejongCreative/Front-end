@@ -7,13 +7,25 @@ import { useParams } from "react-router-dom";
 import ChatListArea from "../../components/chat/ChatListArea";
 import * as StompJs from "@stomp/stompjs";
 import InDM from "../../components/chat/InDM";
+import { api } from "../../api/Interceptors";
 const ChatPage = () => {
   const [dmName, setDmName] = useState("");
   const [dmId, setDmId] = useState("");
   const [chatList, setChatList] = useState([]);
   const [chat, setChat] = useState("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    //페이지가 렌더링 될 때 채팅 목록 불러오기
+    api
+      .get("/chat/chatlist")
+      .then((response) => {
+        localStorage.setItem("chatList", response);
+        //response안 어디에 보내주는지 백엔드에 물어보고 수정할 것
+        setChatList(response);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <div>
@@ -27,7 +39,7 @@ const ChatPage = () => {
           <Toolbar />
 
           <Grid container alignItems="center">
-            <ChatListArea />
+            <ChatListArea chatList={chatList} />
             <Divider
               orientation="vertical"
               flexItem
