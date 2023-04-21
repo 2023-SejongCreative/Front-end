@@ -9,28 +9,48 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import ModalDmCreate from "./ModalDmCreate";
 import styled from "styled-components";
+import InDM from "./InDM";
+import { api } from "../../api/Interceptors";
 import { useNavigate } from "react-router-dom";
 
-export default function ChatListArea(props) {
-  const { chatList } = props;
+const MyListItem = styled(ListItem)`
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+export default function ChatListArea() {
   const navigate = useNavigate();
   const [color, setColor] = useState("white");
+  const [chatList, setChatList] = useState();
 
   const friend = "세종이";
   const friendSay = "이번 주에 뭐하고 놀거야?";
-  useEffect(() => {}, []);
 
-  const moveDMRoom = () => {
+  useEffect(() => {
+    //페이지가 렌더링 될 때 채팅 목록 불러오기
+    api
+      .get("/chat/chatlist")
+      .then((response) => {
+        localStorage.setItem("chatList", response.data);
+        //response안 어디에 보내주는지 백엔드에 물어보고 수정할 것
+        setChatList(response.data);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const moveDMRoom = (dmID, dmName) => {
+    //  let dmName
     localStorage.setItem("isChatDefault", false);
-
-    navigate(`/chat/3`);
+    // chatList.forEach((v, i) => {
+    //   if (v.id === dmID) dmName = v.name;
+    // });
+    navigate(`/chat/${dmID}`, {
+      state: { chatList: chatList, dmID: dmID, dmName: dmName },
+    });
   };
-  const MyListItem = styled(ListItem)`
-    :hover {
-      cursor: pointer;
-    }
-    background-color: ${color};
-  `;
+
   return (
     <>
       <List sx={{ width: "100%", maxWidth: 300, bgcolor: "background.paper" }}>
@@ -45,11 +65,10 @@ export default function ChatListArea(props) {
         <List>
           {chatList.map((v, i) => (
             <List>
-              ({" "}
               <MyListItem
                 alignItems="flex-start"
                 // 클릭하면 dm id 넘겨주기
-                onClick={() => moveDMRoom()}
+                onClick={() => moveDMRoom(v.id, v.name)}
               >
                 <ListItemText primary={v.name} secondary={v.lastChat} />
               </MyListItem>
@@ -58,11 +77,12 @@ export default function ChatListArea(props) {
                   borderColor: "DarkGrey",
                 }}
               />
-              )
             </List>
           ))}
         </List>
       </List>
+      {/* 이렇게 안 하고 dmDetail페이지를 만들어서 페이지 이동? */}
+      {/* <InDM /> */}
     </>
   );
 }
