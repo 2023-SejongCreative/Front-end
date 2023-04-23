@@ -70,15 +70,23 @@ const ModalDmCreate = () => {
     let body = { name: dmName, email: emailArray };
     if (dmName === "" || sendToWho1 === "")
       alert("채팅방 이름과 초대자 1명은 필수 입력입니다.");
-    api
-      .post("/chat/create", body)
-      .then((response) => {
-        console.log(response);
-        // 요 밑에 채팅방 아이디 받으면(dmID) dm방에 id 세팅할 것
-        handleClose();
-        window.location.reload();
-      })
-      .catch((err) => console.log(err));
+    else {
+      console.log("채팅방 생성!");
+      api
+        .post("/chat/create", body)
+        .then((response) => {
+          console.log("채팅방 생성!", response);
+          // 요 밑에 채팅방 아이디 받으면(dmID) dm방에 id 세팅할 것
+          handleClose();
+          // navigate(`/chat/4`, {
+          //   state: {
+          //     dmID: 4,
+          //     dmName: dmName,
+          //   },
+          // });
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <div>
