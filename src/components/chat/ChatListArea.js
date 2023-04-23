@@ -10,42 +10,48 @@ import Typography from "@mui/material/Typography";
 import ModalDmCreate from "./ModalDmCreate";
 import styled from "styled-components";
 import InDM from "./InDM";
+import { TextField } from "@mui/material";
 import { api } from "../../api/Interceptors";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MyListItem = styled(ListItem)`
-  :hover {
+  &:hover {
     cursor: pointer;
+  }
+  &.selected {
+    background-color: rgba(245, 182, 108, 0.2);
   }
 `;
 
-export default function ChatListArea() {
+export default function ChatListArea(props) {
   const navigate = useNavigate();
-  const [color, setColor] = useState("white");
-  const [chatList, setChatList] = useState();
-
-  const friend = "세종이";
-  const friendSay = "이번 주에 뭐하고 놀거야?";
+  const { dm_id } = useParams();
+  // const [chatList, setChatList] = useState();
+  let chatList = [
+    { id: 1, name: "채팅방1", lastChat: "오 진짜?" },
+    { id: 2, name: "채팅방2", lastChat: "안될게 뭐 있어?" },
+    { id: 3, name: "채팅방3", lastChat: "망해도 돼~" },
+    { id: 4, name: "채팅방4", lastChat: "집착 노노" },
+    { id: 5, name: "채팅방5", lastChat: "불안한게 당연한거여" },
+    { id: 6, name: "채팅방6", lastChat: "나 잘해" },
+    { id: 7, name: "채팅방7", lastChat: "괜찮당께" },
+    { id: 8, name: "채팅방8", lastChat: "으갸갸갹" },
+  ];
 
   useEffect(() => {
-    //페이지가 렌더링 될 때 채팅 목록 불러오기
-    api
-      .get("/chat/chatlist")
-      .then((response) => {
-        localStorage.setItem("chatList", response.data);
-        //response안 어디에 보내주는지 백엔드에 물어보고 수정할 것
-        setChatList(response.data);
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
+    // 페이지가 렌더링 될 때 채팅 목록 불러오기
+    // api
+    //   .get("/chat/chatlist")
+    //   .then((response) => {
+    //     localStorage.setItem("chatList", response.data);
+    //     //response안 어디에 보내주는지 백엔드에 물어보고 수정할 것
+    //     setChatList(response.data);
+    //     console.log(response);
+    //   })
+    //   .catch((err) => console.log(err));
   }, []);
 
   const moveDMRoom = (dmID, dmName) => {
-    //  let dmName
-    localStorage.setItem("isChatDefault", false);
-    // chatList.forEach((v, i) => {
-    //   if (v.id === dmID) dmName = v.name;
-    // });
     navigate(`/chat/${dmID}`, {
       state: { chatList: chatList, dmID: dmID, dmName: dmName },
     });
@@ -55,6 +61,7 @@ export default function ChatListArea() {
     <>
       <List sx={{ width: "100%", maxWidth: 300, bgcolor: "background.paper" }}>
         <ModalDmCreate />
+
         {/* <Divider
           sx={{
             borderColor: "DarkGrey",
@@ -68,13 +75,15 @@ export default function ChatListArea() {
               <MyListItem
                 alignItems="flex-start"
                 // 클릭하면 dm id 넘겨주기
+
                 onClick={() => moveDMRoom(v.id, v.name)}
+                className={dm_id == v.id ? "selected" : ""}
               >
                 <ListItemText primary={v.name} secondary={v.lastChat} />
               </MyListItem>
               <Divider
                 sx={{
-                  borderColor: "DarkGrey",
+                  borderColor: "grey",
                 }}
               />
             </List>
