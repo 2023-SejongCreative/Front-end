@@ -22,7 +22,6 @@ const MyListItem = styled(ListItem)`
     background-color: rgba(245, 182, 108, 0.2);
   }
 `;
-
 export default function ChatListArea(props) {
   const navigate = useNavigate();
   const { dm_id } = useParams();

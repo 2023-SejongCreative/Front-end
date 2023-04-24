@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import * as StompJs from "@stomp/stompjs";
+import { json, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Stomp } from "@stomp/stompjs";
 import styled from "styled-components";
 import { api } from "../../api/Interceptors";
 import ModalDmInvite from "./ModalDmInvite";
+import SockJS from "sockjs-client";
 
 const DmHeaderData = styled.p`
   @media screen and (max-width: 1000px) {
@@ -20,6 +21,7 @@ const DMChatHeader = styled.div`
   background-color: #f5b66c;
   display: flex;
 `;
+
 const StyleBox = styled.div`
   position: fixed;
   width: 500px;
@@ -125,15 +127,15 @@ const InDM = (props) => {
   }, []);
 
   //InviteFriendToDM 함수 채팅방 초대 모달 만들어서 거기 생성 부분에 옮기기
-  const InviteFriendToDM = () => {
-    // let chat_id=dm_id
-    api
-      .post(`/chat/${dm_id}/invite`, {})
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const InviteFriendToDM = () => {
+  //   // let chat_id=dm_id
+  //   api
+  //     .post(`/chat/${dm_id}/invite`, {})
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
   const LeaveDM = () => {
     if (window.confirm("이 채팅방을 나가시겠습니까?")) {
       api
@@ -148,8 +150,6 @@ const InDM = (props) => {
     }
   };
 
-  const client = useRef({});
-
   const { dm_id } = useParams();
   const location = useLocation;
   // const dmID = location.state.dmID;
@@ -158,37 +158,51 @@ const InDM = (props) => {
   const [chat, setChat] = useState("");
   const [peopleIncluded, setPeopleIncluded] = useState();
 
+  const client = useRef({});
+
   const connect = () => {
-    client.current = new StompJs.Client({
-      brokerURL: "ws://localhost:8787/ws",
-      onConnect: () => {
-        console.log("success");
-        subscribe();
-      },
+    const sock = new SockJS("http://localhost:8080/chat");
+    client.current = Stomp.over(sock);
+    client.current.connect({}, () => {
+      //subscribe()
+      client.current.subscribe(`/topic/sub/${dm_id}`, (response) => {
+        console.log(response);
+        const json_body = JSON.parse(response.body);
+        setChatList((_chat_list) => [..._chat_list, json_body]);
+        console.log(json_body);
+      });
     });
+    // client.current = new Stomp.oClient({
+    //   brokerURL: "ws://localhost:8080/ws",
+    //   onConnect: () => {
+    //     console.log("success");
+    //     subscribe();
+    //   },
+    // });
     client.current.activate();
   };
 
-  const publish = (chat) => {
-    if (!client.current.connected) return;
+  const send = (chat) => {
+    // if (!client.current.connected) return;
 
-    client.current.publish({
-      destination: "/pub/chat",
-      body: JSON.stringify({
+    client.current.send(
+      "/pub",
+      {},
+      JSON.stringify({
         dm_id: dm_id,
         chat: chat,
-      }),
-    });
+      })
+    );
 
     setChat(""); //전송하고 나면 인풋값 비워주기
   };
 
-  const subscribe = () => {
-    client.current.subscribe("/sub/chat/" + dm_id, (body) => {
-      const json_body = JSON.parse(body.body);
-      setChatList((_chat_list) => [..._chat_list, json_body]);
-    });
-  };
+  // const subscribe = () => {
+  //   client.current.subscribe("/sub/chat/" + dm_id, (body) => {
+  //     const json_body = JSON.parse(body.body);
+  //     setChatList((_chat_list) => [..._chat_list, json_body]);
+  //   });
+  // };
 
   const disconnect = () => {
     client.current.deactivate();
@@ -202,14 +216,14 @@ const InDM = (props) => {
   const handleSubmit = (event, chat) => {
     // 보내기 버튼 눌렀을 때 publish
     event.preventDefault();
-    publish(chat);
+    send(chat);
   };
 
   useEffect(() => {
     connect();
 
     return () => disconnect();
-  }, []);
+  }, [dm_id]);
 
   return (
     <StyleDMWrapper resize={resize}>
@@ -223,7 +237,8 @@ const InDM = (props) => {
           <ModalDmInvite dm_id={dm_id} />
 
           <h3 style={{ margin: "10px" }}>채팅방 이름</h3>
-          <p> - 전서현, 최호경, 주다현</p>
+          {/* 여기에 peopleIncluded */}
+          <p> - 전서현, 최호경, 주다현 {peopleIncluded}</p>
         </DMChatHeader>
 
         {[
@@ -247,7 +262,7 @@ const InDM = (props) => {
 
       <StyleForm onSubmit={(event) => handleSubmit(event, chat)}>
         <Wrapper>
-          <MyInputBlock>
+          <MyInputBlock resize={resize}>
             <MyInput
               type={"text"}
               name={"chatInput"}
