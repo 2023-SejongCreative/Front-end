@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { api } from "../../api/Interceptors";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -40,8 +41,8 @@ const ButtonInDM = styled.button`
 `;
 
 const ModalDmInvite = (props) => {
+  const navigate = useNavigate();
   const { dm_id } = props;
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -54,6 +55,7 @@ const ModalDmInvite = (props) => {
       .post(`/chat/${dm_id}/invite`, { email: inviteEmail })
       .then((response) => {
         console.log(response);
+        navigate("/chat");
       })
       .catch((err) => console.log(err));
   };

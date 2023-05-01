@@ -7,17 +7,25 @@ import Group from "./pages/group/Group";
 import Room from "./pages/room/Room";
 import ChatPage from "./pages/chat/ChatPage";
 import ChatDetail from "./pages/chat/ChatDetail";
+import VideoPage from "./pages/videochat/VideoPage";
 // import { useSelector } from "react-redux";
 
 function App() {
   // let isAuth = useSelector((state) => state.user.isAuth);
   // let isAuth = localStorage.getItem("isAuth");
+
   const onSlientRefresh = () => {
     api
-      .post("/reissue", {
-        access_token: localStorage.getItem("jwt_accessToken"),
-        refresh_token: localStorage.getItem("jwt_refreshToken"),
-      })
+      .post(
+        "/reissue",
+        {},
+        {
+          headers: {
+            access_token: localStorage.getItem("jwt_accessToken"),
+            refresh_token: localStorage.getItem("jwt_refreshToken"),
+          },
+        }
+      )
       .then((response) => {
         localStorage.setItem("jwt_accessToken", response.headers.access_token);
         localStorage.setItem(
@@ -31,6 +39,7 @@ function App() {
         console.log(err);
       });
   };
+  // onSlientRefresh();
   //performance.navigation.type===1
   if (PerformanceNavigationTiming.type === "reload") {
     onSlientRefresh();
@@ -50,6 +59,7 @@ function App() {
             path="/chat/:dm_id"
             element={<ChatDetail></ChatDetail>}
           ></Route>
+          <Route path="/openvidu" element={<VideoPage></VideoPage>}></Route>
         </Routes>
       </BrowserRouter>
     </div>

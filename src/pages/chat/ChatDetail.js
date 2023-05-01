@@ -109,7 +109,7 @@ const ChatDetail = () => {
           </Grid>
         </Box>
       </Box>
-      <InDM />
+      <InDM dmName={dmName} />
     </div>
   );
 };

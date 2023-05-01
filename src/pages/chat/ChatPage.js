@@ -12,15 +12,12 @@ import { api } from "../../api/Interceptors";
 const ChatPage = () => {
   const [dmName, setDmName] = useState("");
   const [chatList, setChatList] = useState([]);
-
   useEffect(() => {
-    //페이지가 렌더링 될 때 채팅 목록 불러오기
+    // 테스트 get요청
+    // console.log("테스트!");
     // api
-    //   .get("/chat/chatlist")
+    //   .get("/ch")
     //   .then((response) => {
-    //     localStorage.setItem("chatList", response.data);
-    //     //response안 어디에 보내주는지 백엔드에 물어보고 수정할 것
-    //     setChatList(response.data);
     //     console.log(response);
     //   })
     //   .catch((err) => console.log(err));

@@ -13,6 +13,8 @@ export const HeaderBtn = styled.button`
   font-weight: bold;
   border: none;
   background-color: white;
+  /*color,font-size */
+  color: black;
   cursor: pointer;
   :hover {
     background-color: rgba(245, 182, 108, 0.1);
@@ -23,7 +25,7 @@ export const HeaderBtn = styled.button`
 `;
 export const MyTitle = styled.h1`
   margin: 0;
-  padding: 8px;
+  /* padding: 8px; */
   text-align: center;
   cursor: pointer;
 `;
@@ -31,7 +33,6 @@ const drawerWidth = 240;
 const Header = () => {
   const navigate = useNavigate();
   const moveChat = () => {
-    localStorage.setItem("isChatDefault", true);
     navigate("/chat");
   };
   return (

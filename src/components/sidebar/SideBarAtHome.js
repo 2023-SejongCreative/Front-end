@@ -16,8 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Myspace from "../Myspace";
 
 export const MyTitle = styled.h1`
-  margin: 0;
+  /* margin */
+  margin: 8px;
   padding: 8px;
+  font-weight: bold;
   text-align: center;
   cursor: pointer;
 `;
@@ -86,6 +88,7 @@ const SideBar = (props) => {
       // .get(`/groups`)
       .then((response) => {
         console.log(response);
+        setGroups([]);
         setGroups(response.data.groups);
         // setGroups(response.data);
         response.data.groups.forEach((v) => {

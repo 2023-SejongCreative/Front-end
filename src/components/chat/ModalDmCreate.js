@@ -67,7 +67,7 @@ const ModalDmCreate = () => {
     if (sendToWho4 !== "") emailArray.push(sendToWho4);
     if (sendToWho5 !== "") emailArray.push(sendToWho5);
 
-    let body = { name: dmName, email: emailArray };
+    let body = { chat_name: Array(dmName), email: emailArray };
     if (dmName === "" || sendToWho1 === "")
       alert("채팅방 이름과 초대자 1명은 필수 입력입니다.");
     else {
@@ -78,9 +78,10 @@ const ModalDmCreate = () => {
           console.log("채팅방 생성!", response);
           // 요 밑에 채팅방 아이디 받으면(dmID) dm방에 id 세팅할 것
           handleClose();
-          // navigate(`/chat/4`, {
+          navigate("/chat");
+          // navigate(`/chat/${response.body}`, {
           //   state: {
-          //     dmID: 4,
+          //     dmID: response.body,
           //     dmName: dmName,
           //   },
           // });

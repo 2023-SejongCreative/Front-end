@@ -21,7 +21,6 @@ const DMChatHeader = styled.div`
   background-color: #f5b66c;
   display: flex;
 `;
-
 const StyleBox = styled.div`
   position: fixed;
   width: 500px;
@@ -85,6 +84,12 @@ const ButtonInDM = styled.button`
   }
   margin: 5px;
 `;
+const SpeechBubble = styled.div`
+  background-color: wheat;
+  color: black;
+  border: none;
+  border-radius: 5px;
+`;
 const ButtonSubmit = styled.button`
   width: 50px;
   height: 30px;
@@ -105,6 +110,16 @@ const ButtonSubmit = styled.button`
 const InDM = (props) => {
   const [resize, setResize] = useState([]);
   const navigate = useNavigate();
+
+  const { dm_id } = useParams();
+  const location = useLocation;
+  // const dmID = location.state.dmID;
+  // const dmName = location.state.dmName;
+  const { dmName } = props;
+  const [messageList, setMessageList] = useState([]);
+  const [message, setMessage] = useState("");
+  const [peopleIncluded, setPeopleIncluded] = useState();
+
   const handleResize = () => {
     setResize([window.innerWidth, window.innerHeight]);
   };
@@ -120,8 +135,17 @@ const InDM = (props) => {
     api
       .get(`/chat/${dm_id}/userlist`)
       .then((response) => {
+        console.log(response.data.users);
+        setPeopleIncluded(response.data.users);
+      })
+      .catch((err) => console.log(err));
+  }, [dm_id]);
+
+  useEffect(() => {
+    api
+      .get(`/chat/${dm_id}/messagelist`)
+      .then((response) => {
         console.log(response);
-        setPeopleIncluded(response.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -139,7 +163,7 @@ const InDM = (props) => {
   const LeaveDM = () => {
     if (window.confirm("이 채팅방을 나가시겠습니까?")) {
       api
-        .post("/chat/leave")
+        .post(`/chat/${dm_id}/delete`)
         .then((response) => {
           console.log(response);
           navigate("/chat");
@@ -150,28 +174,24 @@ const InDM = (props) => {
     }
   };
 
-  const { dm_id } = useParams();
-  const location = useLocation;
-  // const dmID = location.state.dmID;
-  // const dmName = location.state.dmName;
-  const [chatList, setChatList] = useState([]);
-  const [chat, setChat] = useState("");
-  const [peopleIncluded, setPeopleIncluded] = useState();
-
-  const client = useRef({});
+  const client = useRef();
 
   const connect = () => {
-    const sock = new SockJS("http://localhost:8080/chat");
-    client.current = Stomp.over(sock);
+    client.current = Stomp.over(() => {
+      const sock = new SockJS("http://172.16.95.104:8080/chat");
+      return sock;
+    });
     client.current.connect({}, () => {
       //subscribe()
-      client.current.subscribe(`/topic/sub/${dm_id}`, (response) => {
+      console.log("소켓연결");
+      client.current.subscribe(`/sub/chat/${dm_id}`, (response) => {
         console.log(response);
         const json_body = JSON.parse(response.body);
-        setChatList((_chat_list) => [..._chat_list, json_body]);
+        setMessageList((_chat_list) => [..._chat_list, json_body]);
         console.log(json_body);
       });
     });
+
     // client.current = new Stomp.oClient({
     //   brokerURL: "ws://localhost:8080/ws",
     //   onConnect: () => {
@@ -179,6 +199,7 @@ const InDM = (props) => {
     //     subscribe();
     //   },
     // });
+
     client.current.activate();
   };
 
@@ -186,15 +207,16 @@ const InDM = (props) => {
     // if (!client.current.connected) return;
 
     client.current.send(
-      "/pub",
+      "/pub/chat",
       {},
       JSON.stringify({
         dm_id: dm_id,
-        chat: chat,
+        content: chat,
+        sender: localStorage.getItem("email"),
       })
     );
-
-    setChat(""); //전송하고 나면 인풋값 비워주기
+    console.log("메시지 보낸다");
+    setMessage(""); //전송하고 나면 인풋값 비워주기
   };
 
   // const subscribe = () => {
@@ -210,24 +232,27 @@ const InDM = (props) => {
 
   const handleChange = (event) => {
     // 채팅 입력 시 state에 값 설정
-    setChat(event.target.value);
+    setMessage(event.target.value);
   };
 
   const handleSubmit = (event, chat) => {
     // 보내기 버튼 눌렀을 때 publish
     event.preventDefault();
     send(chat);
+    setMessage(event.target.value);
   };
 
   useEffect(() => {
     connect();
-
     return () => disconnect();
   }, [dm_id]);
 
+  if (!peopleIncluded) {
+    return <div></div>;
+  }
   return (
     <StyleDMWrapper resize={resize}>
-      <div>{chatList}</div>
+      {/* <div>{messageList}</div> */}
       <StyleBox resize={resize}>
         <DMChatHeader resize={resize}>
           {/* <ButtonInDM onClick={InviteFriendToDM}>
@@ -236,11 +261,18 @@ const InDM = (props) => {
           <ButtonInDM onClick={LeaveDM}>-{/* <AddIcon /> */}</ButtonInDM>
           <ModalDmInvite dm_id={dm_id} />
 
-          <h3 style={{ margin: "10px" }}>채팅방 이름</h3>
+          <h3 style={{ margin: "10px" }}>{dmName}</h3>
           {/* 여기에 peopleIncluded */}
-          <p> - 전서현, 최호경, 주다현 {peopleIncluded}</p>
+          {peopleIncluded.map((v, i) => (
+            <p> &nbsp; {v.name} | </p>
+          ))}
+          {/* <p> - 전서현, 최호경, 주다현 {peopleIncluded}</p> */}
         </DMChatHeader>
 
+        {/* messageList 뿌려주기 */}
+        {messageList.map((v, i) => {
+          return <SpeechBubble>{v}</SpeechBubble>;
+        })}
         {[
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -260,14 +292,15 @@ const InDM = (props) => {
         ]}
       </StyleBox>
 
-      <StyleForm onSubmit={(event) => handleSubmit(event, chat)}>
+      {/* <StyleForm> */}
+      <StyleForm onSubmit={(event) => handleSubmit(event, message)}>
         <Wrapper>
           <MyInputBlock resize={resize}>
             <MyInput
               type={"text"}
               name={"chatInput"}
               onChange={handleChange}
-              value={chat}
+              value={message}
               resize={resize}
             />
             <ButtonSubmit type="submit" value="전송">

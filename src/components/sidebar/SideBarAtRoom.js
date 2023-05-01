@@ -85,6 +85,7 @@ const SideBarRoom = (props) => {
     rooms.forEach((v) => {
       roomName.push(v["room_name"]);
     });
+    setRoomNames("");
     setRoomNames(roomName);
   }, []);
 
