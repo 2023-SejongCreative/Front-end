@@ -1,0 +1,16 @@
+{
+  "groups": [
+    { "manager": 1, "group_name": "창의학기제", "group_id": 6 },
+    { "manager": 1, "group_name": "캡스톤", "group_id": 10 },
+    { "manager": 1, "group_name": "동아리", "group_id": 13 },
+    { "manager": 1, "group_name": "회사", "group_id": 15 },
+    { "manager": 1, "group_name": "그룹5", "group_id": 17 }
+  ],
+  "rooms": [
+    { "group_id": 6, "room_id": 1, "room_name": "룸1" },
+    { "group_id": 6, "room_id": 2, "room_name": "룸2" },
+    { "group_id": 10, "room_id": 3, "room_name": "룸3" },
+    { "group_id": 10, "room_id": 4, "room_name": "룸4" },
+    { "group_id": 10, "room_id": 5, "room_name": "룸5" }
+  ]
+}
